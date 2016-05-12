@@ -45,11 +45,14 @@ class Warpable < ActiveRecord::Base
   # this runs each time warpable is moved/distorted, 
   # to calculate resolution
   def save_dimensions
-    if Rails.env.production?
-      geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(self.image.url)) # s3 version
-    else
-      geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(self.image).path) # local filesystem version
-    end
+
+    # S3 disabled for private instance (icarito)
+ 
+    #if Rails.env.production?
+    #  geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(self.image.url)) # s3 version
+    #else
+    geo = Paperclip::Geometry.from_file(Paperclip.io_adapters.for(self.image).path) # local filesystem version
+    #end
 
     #Rails >= v3.1 only
     self.update_column(:width, geo.width)
@@ -205,8 +208,8 @@ class Warpable < ActiveRecord::Base
         }
       }
     else
-      require "ftools"
-      File.copy(Rails.root.to_s+'/public'+self.image.to_s,local_location)
+      require "fileutils"
+      FileUtils.cp(Rails.root.to_s+'/public'+self.image.to_s,local_location)
     end
 
     points = ""

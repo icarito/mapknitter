@@ -266,10 +266,10 @@ class Map < ActiveRecord::Base
       export.status = 'complete'
       export.save
 
-    rescue SystemCallError
-      export = self.export
-      export.status = 'failed'
-      export.save
+#    rescue SystemCallError
+#      export = self.export
+#      export.status = 'failed'
+#      export.save
     end
     return export.status
   end
