@@ -6,7 +6,7 @@ class Exporter
     
     # everything in -working/ can be deleted; 
     # this is just so we can use the files locally outside of s3
-    working_directory = working_directory(path)
+    working_directory = get_working_directory(path)
     Dir.mkdir(working_directory) unless (File.exists?(working_directory) && File.directory?(working_directory))
     local_location = working_directory+id.to_s+'-'+image_file_name.to_s
 
@@ -186,9 +186,7 @@ class Exporter
     [x1,y1]
   end
 
-  private
-
-  def working_directory(path)
+  def get_working_directory(path)
     "public/warps/" + path + "-working/"
   end
 
