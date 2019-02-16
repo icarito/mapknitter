@@ -22,18 +22,23 @@ class WarpableTest < ActiveSupport::TestCase
   end
 
   test "try export" do
+    # make a sample image
     system('mkdir -p public/system/images/1/original')
     system('cp test/fixtures/demo.png public/system/images/1/original/')
     system('mkdir -p public/warps/saugus-landfill-incinerator')
     system('touch public/warps/saugus-landfill-incinerator/folder')
     assert File.exist?('public/warps/saugus-landfill-incinerator/folder')
-    w = warpables(:one)    
+    w = warpables(:one)
     assert_not_nil w.save_dimensions
-    assert_not_nil w.generate_perspectival_distort(10, w.map.slug)
-    assert_not_nil w.delete_temp_files(w.map.slug)
-    assert_not_nil w.working_directory(w.map.slug)
-    assert_not_nil w.warps_directory(w.map.slug)
     assert_not_nil w.user_id 
     assert File.exist?('public/warps/saugus-landfill-incinerator/1-geo.tif')
+  end
+
+  test "isolated export lib" do
+    w = warpables(:one)    
+    assert_not_nil Exporter.generate_perspectival_distort(10, w.map.slug, w.nodes_array, w.id, w.image_file_name, w.image, w.height, w.width)
+    assert_not_nil Exporter.delete_temp_files(w.map.slug)
+    assert_not_nil Exporter.get_working_directory(w.map.slug)
+    assert_not_nil Exporter.warps_directory(w.map.slug)
   end
 end
