@@ -33,12 +33,4 @@ class WarpableTest < ActiveSupport::TestCase
     assert_not_nil w.user_id 
     assert File.exist?('public/warps/saugus-landfill-incinerator/1-geo.tif')
   end
-
-  test "isolated export lib" do
-    w = warpables(:one)    
-    assert_not_nil Exporter.generate_perspectival_distort(2, w.map.slug, w.nodes_array, w.id, w.image_file_name, w.image, w.height, w.width)
-    assert_not_nil Exporter.delete_temp_files(w.map.slug)
-    assert_not_nil Exporter.get_working_directory(w.map.slug)
-    assert_not_nil Exporter.warps_directory(w.map.slug)
-  end
 end

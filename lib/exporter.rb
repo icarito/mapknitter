@@ -19,6 +19,9 @@ class Exporter
     system('rm ' + warps_directory(path) + '*.png')
   end
 
+  ########################
+  ## Run on each image:
+
   # pixels per meter = pxperm 
   def self.generate_perspectival_distort(pxperm, path, nodes_array, id, image_file_name, image, height, width)
     require 'net/http'
@@ -205,29 +208,37 @@ class Exporter
     [x1,y1]
   end
 
-  # generates a tileset at root/public/tms/<slug>/
-  # root is something like https://mapknitter.org
-  def self.generate_tiles(key, slug, root)
-    gdal2tiles = 'gdal2tiles.py -k -t "'+slug+'" -g "'+key+'" '+root+'/public/warps/'+slug+'/'+slug+'-geo.tif '+root+'/public/tms/'+slug+"/"
-    system(self.ulimit+gdal2tiles)
-  end
+  ########################
+  ## Run on maps:
 
-  # zips up tiles at root/public/tms/<slug>.zip;
-  def self.zip_tiles(slug)
-    rmzip = 'cd public/tms/ && rm '+slug+'.zip && cd ../../'
-    system(self.ulimit+rmzip)
-    zip = 'cd public/tms/ && zip -rq '+slug+'.zip '+slug+'/ && cd ../../'
-    system(self.ulimit+zip)
-  end
+  # distort all warpables, returns upper left corner coords in x,y
+  def self.distort_warpables(scale, warpables, export, slug)
 
-  # generates a tileset at root/public/tms/<slug>/
-  def self.generate_jpg(slug, root)
-    imageMagick = 'convert -background white -flatten '+root+'/public/warps/'+slug+'/'+slug+'-geo.tif '+root+'/public/warps/'+slug+'/'+slug+'.jpg'
-    system(self.ulimit+imageMagick)
+    puts '> generating geotiffs of each warpable in GDAL'
+    lowest_x=0
+    lowest_y=0
+    warpable_coords = []
+    current = 0
+    warpables.each do |warpable|
+     current += 1
+
+     ## TODO: refactor to generate static status file:
+     export.status = 'warping '+current.to_s+' of '+warpables.length.to_s
+     puts 'warping '+current.to_s+' of '+warpables.length.to_s
+     export.save
+     ## 
+
+     my_warpable_coords = warpable.generate_perspectival_distort(scale,slug)
+     puts '- '+my_warpable_coords.to_s
+     warpable_coords << my_warpable_coords
+     lowest_x = my_warpable_coords.first if (my_warpable_coords.first < lowest_x || lowest_x == 0)
+     lowest_y = my_warpable_coords.last if (my_warpable_coords.last < lowest_y || lowest_y == 0)
+    end
+    [lowest_x,lowest_y,warpable_coords]
   end
 
   # generate a tiff from all warpable images in this set
-  def self.generate_composite_tiff(coords,origin,placed_warpables,slug,ordered)
+  def self.generate_composite_tiff(coords, origin, placed_warpables, slug, ordered)
     directory = "public/warps/"+slug+"/"
     composite_location = directory+slug+'-geo.tif'
     geotiffs = ''
@@ -262,32 +273,29 @@ class Exporter
     composite_location
   end
 
-  # distort all warpables, returns upper left corner coords in x,y
-  def self.distort_warpables(scale, warpables, export, slug)
-
-    puts '> generating geotiffs of each warpable in GDAL'
-    lowest_x=0
-    lowest_y=0
-    warpable_coords = []
-    current = 0
-    warpables.each do |warpable|
-     current += 1
-
-     ## TODO: refactor to generate static status file:
-     export.status = 'warping '+current.to_s+' of '+warpables.length.to_s
-     puts 'warping '+current.to_s+' of '+warpables.length.to_s
-     export.save
-     ## 
-
-     my_warpable_coords = warpable.generate_perspectival_distort(scale,slug)
-     puts '- '+my_warpable_coords.to_s
-     warpable_coords << my_warpable_coords
-     lowest_x = my_warpable_coords.first if (my_warpable_coords.first < lowest_x || lowest_x == 0)
-     lowest_y = my_warpable_coords.last if (my_warpable_coords.last < lowest_y || lowest_y == 0)
-    end
-    [lowest_x,lowest_y,warpable_coords]
+  # generates a tileset at root/public/tms/<slug>/
+  # root is something like https://mapknitter.org
+  def self.generate_tiles(key, slug, root)
+    gdal2tiles = 'gdal2tiles.py -k -t "'+slug+'" -g "'+key+'" '+root+'/public/warps/'+slug+'/'+slug+'-geo.tif '+root+'/public/tms/'+slug+"/"
+    system(self.ulimit+gdal2tiles)
   end
 
+  # zips up tiles at root/public/tms/<slug>.zip;
+  def self.zip_tiles(slug)
+    rmzip = 'cd public/tms/ && rm '+slug+'.zip && cd ../../'
+    system(self.ulimit+rmzip)
+    zip = 'cd public/tms/ && zip -rq '+slug+'.zip '+slug+'/ && cd ../../'
+    system(self.ulimit+zip)
+  end
+
+  # generates a tileset at root/public/tms/<slug>/
+  def self.generate_jpg(slug, root)
+    imageMagick = 'convert -background white -flatten '+root+'/public/warps/'+slug+'/'+slug+'-geo.tif '+root+'/public/warps/'+slug+'/'+slug+'.jpg'
+    system(self.ulimit+imageMagick)
+  end
+
+  # runs the above map functions while maintaining a record of state in an Export model;
+  # we'll be replacing the export model state with a flat status file
   def self.run_export(user,resolution,export,id,slug,root,average_scale,placed_warpables,key)
     begin
       export.user_id = user.id if user
