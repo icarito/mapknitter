@@ -306,7 +306,7 @@ class Exporter
       puts stdout.readlines
       puts stderr.readlines
 
-      puts '> averaging scales'
+      puts '> averaging scales; resolution: ' + resolution.to_s
       pxperm = 100/(resolution).to_f || average_scale # pixels per meter
       puts '> scale: ' + pxperm.to_s + 'pxperm'
 
