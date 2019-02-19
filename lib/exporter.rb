@@ -262,7 +262,7 @@ class Exporter
     warpables.each do |warpable|
       geotiffs += ' '+directory+warpable.id.to_s+'-geo.tif'
       if first
-        gdalwarp = "gdalwarp -te "+minlon.to_s+" "+minlat.to_s+" "+maxlon.to_s+" "+maxlat.to_s+" "+directory+warpable.id.to_s+'-geo.tif '+directory+slug+'-geo.tif'
+        gdalwarp = "gdalwarp -te -s EPSG:3857 "+minlon.to_s+" "+minlat.to_s+" "+maxlon.to_s+" "+maxlat.to_s+" "+directory+warpable.id.to_s+'-geo.tif '+directory+slug+'-geo.tif'
         first = false
       else
         gdalwarp = "gdalwarp "+directory+warpable.id.to_s+'-geo.tif '+directory+slug+'-geo.tif'
@@ -276,7 +276,7 @@ class Exporter
   # generates a tileset at root/public/tms/<slug>/
   # root is something like https://mapknitter.org
   def self.generate_tiles(key, slug, root)
-    gdal2tiles = 'gdal2tiles.py -k -t "'+slug+'" -g "'+key+'" '+root+'/public/warps/'+slug+'/'+slug+'-geo.tif '+root+'/public/tms/'+slug+"/"
+    gdal2tiles = 'gdal2tiles.py -k -t -s EPSG:3857 "'+slug+'" -g "'+key+'" '+root+'/public/warps/'+slug+'/'+slug+'-geo.tif '+root+'/public/tms/'+slug+"/"
     system(self.ulimit+gdal2tiles)
   end
 
