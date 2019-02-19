@@ -13,22 +13,26 @@ class ExporterTest < ActiveSupport::TestCase
 
     w = warpables(:one)    
     coords = Exporter.generate_perspectival_distort(scale, w.map.slug, w.nodes_array, w.id, w.image_file_name, w.image, w.height, w.width)
-    assert_not_nil coords
-    assert_not_nil Exporter.delete_temp_files(w.map.slug)
-    assert_not_nil Exporter.get_working_directory(w.map.slug)
-    assert_not_nil Exporter.warps_directory(w.map.slug)
+    assert coords
+    assert Exporter.get_working_directory(w.map.slug)
+    assert Exporter.warps_directory(w.map.slug)
 
     map = Map.first
+
+    # get rid of existing geotiff
+    system('rm -r public/warps/saugus-landfill-incinerator/1-geo.tif')
     origin = Exporter.distort_warpables(scale, map.warpables, map.export, map.slug)
     lowest_x, lowest_y, warpable_coords = origin
-    assert_not_nil origin
+    assert origin
     ordered = false
     # these params could be compressed - warpable coords is part of origin; are coords and origin required?
-    assert_not_nil Exporter.generate_composite_tiff(warpable_coords, origin, map.placed_warpables, map.slug, ordered)
-    assert_not_nil Exporter.generate_tiles('', map.slug, Rails.root.to_s)
-    assert_not_nil Exporter.zip_tiles(map.slug)
-    assert_not_nil Exporter.generate_jpg(map.slug, Rails.root.to_s)
+    assert Exporter.generate_composite_tiff(warpable_coords, origin, map.placed_warpables, map.slug, ordered)
+    assert Exporter.generate_tiles('', map.slug, Rails.root.to_s)
+    assert Exporter.zip_tiles(map.slug)
+    assert Exporter.generate_jpg(map.slug, Rails.root.to_s)
     resolution = 20
-    assert_not_nil Exporter.run_export(User.last, resolution, map.export, map.id, map.slug, Rails.root.to_s, map.average_scale, map.placed_warpables, '')
+    assert Exporter.run_export(User.last, resolution, map.export, map.id, map.slug, Rails.root.to_s, map.average_scale, map.placed_warpables, '')
+    assert Exporter.delete_temp_files(w.map.slug)
   end
 end
+
