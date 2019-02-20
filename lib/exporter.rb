@@ -262,7 +262,7 @@ class Exporter
     warpables.each do |warpable|
       geotiffs += ' '+directory+warpable.id.to_s+'-geo.tif'
       if first
-        gdalwarp = "gdalwarp -te -s EPSG:3857 "+minlon.to_s+" "+minlat.to_s+" "+maxlon.to_s+" "+maxlat.to_s+" "+directory+warpable.id.to_s+'-geo.tif '+directory+slug+'-geo.tif'
+        gdalwarp = "gdalwarp -s EPSG:3857 -te "+minlon.to_s+" "+minlat.to_s+" "+maxlon.to_s+" "+maxlat.to_s+" "+directory+warpable.id.to_s+'-geo.tif '+directory+slug+'-geo.tif'
         first = false
       else
         gdalwarp = "gdalwarp "+directory+warpable.id.to_s+'-geo.tif '+directory+slug+'-geo.tif'
