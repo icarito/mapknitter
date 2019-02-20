@@ -276,7 +276,7 @@ class Exporter
   # generates a tileset at root/public/tms/<slug>/
   # root is something like https://mapknitter.org
   def self.generate_tiles(key, slug, root)
-    gdal2tiles = 'gdal2tiles.py -k -t -s EPSG:3857 "'+slug+'" -g "'+key+'" '+root+'/public/warps/'+slug+'/'+slug+'-geo.tif '+root+'/public/tms/'+slug+"/"
+    gdal2tiles = 'gdal2tiles.py -k -s EPSG:3857 -t "'+slug+'" -g "'+key+'" '+root+'/public/warps/'+slug+'/'+slug+'-geo.tif '+root+'/public/tms/'+slug+"/"
     system(self.ulimit+gdal2tiles)
   end
 
