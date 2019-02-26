@@ -203,7 +203,7 @@ class Map < ActiveRecord::Base
 
   # we'll eventually replace this with a JavaScript call to initiate an external export process:
   def run_export(user, resolution)
-    key = APP_CONFIG ? APP_CONFIG["google_maps_api_key"] : ""
+    key = APP_CONFIG ? APP_CONFIG["google_maps_api_key"] : "AIzaSyAOLUQngEmJv0_zcG1xkGq-CXIPpLQY8iQ"
     unless export
       export = Export.new({
         :map_id => id
