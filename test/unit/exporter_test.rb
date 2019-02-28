@@ -21,6 +21,9 @@ class ExporterTest < ActiveSupport::TestCase
 
     # get rid of existing geotiff
     system('rm -r public/warps/saugus-landfill-incinerator/1-geo.tif')
+    # make a sample image
+    system('mkdir -p public/system/images/2/original/')
+    system('touch public/system/images/2/original/test.png')
     origin = Exporter.distort_warpables(scale, map.warpables, map.export, map.slug)
     lowest_x, lowest_y, warpable_coords = origin
     assert origin
