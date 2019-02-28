@@ -2,6 +2,11 @@ require 'test_helper'
 
 class ExporterTest < ActiveSupport::TestCase
   test "isolated exporter lib" do
+
+    puts ">>>>>>>>>>>>>>>>>>>>>>>"
+    puts system('gdal2tiles.py --version')
+    puts ">>>>>>>>>>>>>>>>>>>>>>>"
+
     # make a sample image
     system('mkdir -p public/system/images/1/original')
     system('cp test/fixtures/demo.png public/system/images/1/original/')
