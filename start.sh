@@ -3,7 +3,9 @@
 pidfile=/app/tmp/pids/server.pid
 
 bundle check || bundle install
-bower install --allow-root
+yarn --ignore-engines --ignore-scripts --modules-folder ./public/lib
+rake assets:precompile
+
 
 if [ -f $pidfile ] ; then
 	>&2 echo 'Server PID file already exists. Removing it...';
