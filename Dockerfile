@@ -12,7 +12,7 @@ ENV HOME /root
 
 # Install dependencies
 RUN apt-get update -qq && apt-get install -y \
-  bundler libmysqlclient-dev ruby-rmagick libfreeimage3 \
+  bundler ruby-rmagick libfreeimage3 \
   libfreeimage-dev ruby-dev curl libcurl4-openssl-dev \
   libssl-dev zip nodejs-legacy npm \
     build-essential \
