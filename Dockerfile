@@ -1,7 +1,7 @@
 # Dockerfile # Mapknitter
 # https://github.com/publiclab/mapknitter/
 
-FROM ruby:2.1.2
+FROM ruby:2.4.4-stretch
 MAINTAINER Sebastian Silva "sebastian@fuentelibre.org"
 
 LABEL This image deploys Mapknitter!
@@ -34,6 +34,7 @@ RUN apt-get update -qq && apt-get install -y \
     libhdf5-serial-dev \
     bash-completion \
     cmake
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 RUN npm install -g bower
 
 # Install updated Gdal (taken from https://hub.docker.com/r/geographica/gdal2/dockerfile)
