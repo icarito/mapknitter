@@ -13,7 +13,7 @@ ENV HOME /root
 # Install dependencies
 RUN apt-get update -qq && apt-get install -y \
   bundler ruby-rmagick libfreeimage3 \
-  libfreeimage-dev ruby-dev curl libcurl4-openssl-dev \
+  libfreeimage-dev ruby-dev curl \
   libssl-dev zip nodejs-legacy \
     build-essential \
     python-dev \
