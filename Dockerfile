@@ -11,10 +11,11 @@ RUN mkdir -p /app
 ENV HOME /root
 
 # Install dependencies
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 RUN apt-get update -qq && apt-get install -y \
   bundler ruby-rmagick libfreeimage3 \
   libfreeimage-dev ruby-dev curl \
-  libssl-dev zip nodejs-legacy \
+  libssl-dev zip nodejs \
     build-essential \
     python-dev \
     python3-dev \
@@ -34,7 +35,6 @@ RUN apt-get update -qq && apt-get install -y \
     libhdf5-serial-dev \
     bash-completion \
     cmake
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 RUN npm install -g bower
 
 # Install updated Gdal (taken from https://hub.docker.com/r/geographica/gdal2/dockerfile)
