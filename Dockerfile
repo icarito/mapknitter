@@ -14,7 +14,7 @@ ENV HOME /root
 RUN apt-get update -qq && apt-get install -y \
   bundler ruby-rmagick libfreeimage3 \
   libfreeimage-dev ruby-dev curl libcurl4-openssl-dev \
-  libssl-dev zip nodejs-legacy npm \
+  libssl-dev zip nodejs-legacy \
     build-essential \
     python-dev \
     python3-dev \
