@@ -14,6 +14,7 @@ RUN apt-get update -qq && apt-get install -y \
   libfreeimage-dev ruby-dev curl \
   libssl-dev zip nodejs gdal-bin
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
+RUN apt-get install npm
 RUN npm install -g bower
 
 # Install bundle of gems
