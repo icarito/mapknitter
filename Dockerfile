@@ -12,9 +12,11 @@ ENV HOME /root
 RUN apt-get update -qq && apt-get install -y \
   bundler ruby-rmagick libfreeimage3 \
   libfreeimage-dev ruby-dev curl \
-  libssl-dev zip nodejs gdal-bin
+  libssl-dev zip nodejs gdal-bin \
+  ruby-build
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && apt-get install -y npm
 RUN npm install -g bower
+RUN rbenv install 2.4.4
 
 # Install bundle of gems
 WORKDIR /tmp
