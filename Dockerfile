@@ -22,6 +22,7 @@ RUN apt-get update -qq && apt-get install -y \
 # Ruby
 RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB && curl -sSL https://get.rvm.io | bash -s stable && usermod -a -G rvm root
 RUN /bin/bash -l -c ". /etc/profile.d/rvm.sh && rvm install 2.4.4 && rvm use 2.4.4 --default"
+
 # The entry point here is an initialization process, 
 # it will be used as arguments for e.g.
 # `docker run` command 
@@ -32,6 +33,7 @@ RUN npm install -g bower
 
 
 # Install bundle of gems
+SHELL [ "/bin/bash", "-l", "-c" ]
 WORKDIR /tmp
 ADD Gemfile /tmp/Gemfile
 ADD Gemfile.lock /tmp/Gemfile.lock
