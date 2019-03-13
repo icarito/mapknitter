@@ -9,7 +9,7 @@ db:
     - /srv/mapknitter_priv1/mk1_database:/var/lib/mysql
 web:
   build: .
-  command: sleep 5 && bundle exec rails s -p 3000 -b '0.0.0.0'
+  command: ./start.sh
   environment:
     - RAILS_ENV=production
   volumes:
