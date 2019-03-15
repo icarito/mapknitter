@@ -49,6 +49,8 @@ class ExporterTest < ActiveSupport::TestCase
     system('mkdir -p public/tms/saugus-landfill-incinerator')
     system('touch public/warps/saugus-landfill-incinerator/folder')
     assert File.exist?('public/warps/saugus-landfill-incinerator/folder')
+    system('mkdir -p public/warps/saugus-landfill-incinerator-working')
+    system('touch public/warps/saugus-landfill-incinerator/test.png')
     assert Exporter.delete_temp_files(w.map.slug)
   end
 end
