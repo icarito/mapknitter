@@ -174,7 +174,7 @@ DEPENDENCIES
   geokit-rails (= 1.1.4)
   image_science (= 1.2.6)
   jshintrb
-  mysql2 (~> 0.3.20)
+  mysql2 (< 0.4)
   oa-openid (= 0.3.2)
   open_id_authentication
   paperclip (~> 4.2.2)
@@ -198,4 +198,4 @@ RUBY VERSION
    ruby 2.4.4p296
 
 BUNDLED WITH
-   1.16.2
+   1.16.6
